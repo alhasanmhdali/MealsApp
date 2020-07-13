@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../models/meal.dart';
+import '../settings.dart';
 
 enum DataShow { ingredients, instructions }
 
 class MealScreen extends StatefulWidget {
   static const routeName = '/meal-screen';
+
+  final Settings settings;
+
+  MealScreen(this.settings);
 
   @override
   _MealScreenState createState() => _MealScreenState();
@@ -107,30 +112,35 @@ class _MealScreenState extends State<MealScreen> {
       );
     }
 
-    final _swapableData = GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        if (details.delta.dx > 2) {
-          setState(() {
-            _show = DataShow.ingredients;
-          });
-        } else if (details.delta.dx < -2) {
-          setState(() {
-            _show = DataShow.instructions;
-          });
-        }
-      },
-      child: Container(
-        width: double.infinity,
-        height: _screenSize * 0.45,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(color: Colors.white38),
-        child: _itemLists(
-          _show == DataShow.instructions ? meal.steps : meal.ingredients,
-        ),
-      ),
+    // final _swapableData = GestureDetector(
+    //   onHorizontalDragUpdate: (details) {
+    //     if (details.delta.dx > 2) {
+    //       setState(() {
+    //         _show = DataShow.ingredients;
+    //       });
+    //     } else if (details.delta.dx < -2) {
+    //       setState(() {
+    //         _show = DataShow.instructions;
+    //       });
+    //     }
+    //   },
+    //   child: Container(
+    //     width: double.infinity,
+    //     height: _screenSize * 0.45,
+    //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    //     decoration: BoxDecoration(color: Colors.white38),
+    //     child: _itemLists(
+    //       _show == DataShow.instructions ? meal.steps : meal.ingredients,
+    //     ),
+    //   ),
+    // );
+
+    PageController viewController = PageController(
+      initialPage: _show == DataShow.instructions ? 1 : 0,
     );
 
     final _pageView = PageView(
+      controller: viewController,
       onPageChanged: (index) {
         setState(() {
           if (index == 0)
@@ -150,13 +160,6 @@ class _MealScreenState extends State<MealScreen> {
         child: Column(
           children: [
             Container(
-              // decoration: BoxDecoration(boxShadow: [
-              //   BoxShadow(
-              //     offset: Offset(0, 1),
-              //     color: Color.fromRGBO(0, 0, 0, 0.5),
-              //     blurRadius: 3,
-              //   ),
-              // ]),
               child: Image.network(
                 meal.imageUrl,
                 height: _screenSize * 0.35,
@@ -228,6 +231,9 @@ class _MealScreenState extends State<MealScreen> {
                         onPressed: () {
                           setState(() {
                             _show = DataShow.ingredients;
+                            viewController.animateToPage(0,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.linearToEaseOut);
                           });
                         },
                         child: _selectedItem(
@@ -237,6 +243,9 @@ class _MealScreenState extends State<MealScreen> {
                         onPressed: () {
                           setState(() {
                             _show = DataShow.instructions;
+                            viewController.animateToPage(1,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.linearToEaseOut);
                           });
                         },
                         child: _selectedItem(
@@ -256,6 +265,17 @@ class _MealScreenState extends State<MealScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: widget.settings.isFavorite(meal.id)
+            ? Icon(Icons.star)
+            : Icon(Icons.star_border),
+        onPressed: () {
+          // Navigator.of(context).pop(meal.id);
+          setState(() {
+            widget.settings.clickFavorite(meal.id);
+          });
+        },
       ),
     );
   }

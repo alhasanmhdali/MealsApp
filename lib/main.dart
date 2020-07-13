@@ -4,10 +4,13 @@ import './screens/meal_screen.dart';
 import './screens/category_menu_screen.dart';
 import './screens/tabs_screen.dart';
 import './screens/filters_screen.dart';
+import './settings.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final Settings settings = Settings();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,10 +35,10 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/': (ctx) => TabsScreen(),
-        CategoryMenuScreen.routeName: (ctx) => CategoryMenuScreen(),
-        MealScreen.routeName: (ctx) => MealScreen(),
-        FiltersScreen.routName: (ctx) => FiltersScreen(),
+        '/': (ctx) => TabsScreen(settings),
+        CategoryMenuScreen.routeName: (ctx) => CategoryMenuScreen(settings),
+        MealScreen.routeName: (ctx) => MealScreen(settings),
+        FiltersScreen.routName: (ctx) => FiltersScreen(settings),
       },
     );
   }

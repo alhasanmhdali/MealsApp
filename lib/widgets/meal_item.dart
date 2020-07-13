@@ -6,6 +6,7 @@ import '../models/meal.dart';
 class MealItem extends StatelessWidget {
   final Meal meal;
   final Color catColor;
+  final Function updateSuper;
 
   String mealComplexity() {
     switch (this.meal.complexity) {
@@ -41,14 +42,19 @@ class MealItem extends StatelessWidget {
     }
   }
 
-  MealItem(this.meal, this.catColor);
+  MealItem({this.meal, this.catColor, this.updateSuper});
 
   void openMeal(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(MealScreen.routeName, arguments: {
-      'meal': meal,
-      'catColor': catColor,
-      'complexity': mealComplexity(),
-      'affordability': mealAffordability(),
+    Navigator.of(ctx).pushNamed(
+      MealScreen.routeName,
+      arguments: {
+        'meal': meal,
+        'catColor': catColor,
+        'complexity': mealComplexity(),
+        'affordability': mealAffordability(),
+      },
+    ).then((result) {
+      updateSuper();
     });
   }
 

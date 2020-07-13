@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mealsapp/dummy_data.dart';
 
 import '../widgets/category_item.dart';
-import '../dummy_data.dart';
+import '../settings.dart';
 
 class CategoriesScreen extends StatelessWidget {
+  final Settings settings;
+
+  CategoriesScreen(this.settings);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Meals Index'),
-      // ),
       body: GridView(
         padding: EdgeInsets.all(15),
         children: DUMMY_CATEGORIES
@@ -17,6 +19,7 @@ class CategoriesScreen extends StatelessWidget {
                   cat.id,
                   cat.title,
                   cat.color,
+                  settings.getCategoryCount(cat.id),
                 ))
             .toList(),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

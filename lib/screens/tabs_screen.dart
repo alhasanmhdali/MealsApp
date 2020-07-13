@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import './categories_screen.dart';
 import './favorites_screen.dart';
 import '../widgets/main_drawer.dart';
+import '../settings.dart';
 
 class TabsScreen extends StatefulWidget {
+  final Settings settings;
+
+  TabsScreen(this.settings);
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -47,16 +52,25 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
-  final List<Map<String, Object>> _screens = [
-    {
-      'title': 'Categories',
-      'body': CategoriesScreen(),
-    },
-    {
-      'title': 'Favorites',
-      'body': FavoritesScreen(),
-    },
-  ];
+  List<Map<String, Object>> _screens;
+  void setScreens() {
+    _screens = [
+      {
+        'title': 'Categories',
+        'body': CategoriesScreen(widget.settings),
+      },
+      {
+        'title': 'Favorites',
+        'body': FavoritesScreen(widget.settings),
+      },
+    ];
+  }
+
+  @override
+  initState() {
+    setScreens();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
